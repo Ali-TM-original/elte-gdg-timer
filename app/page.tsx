@@ -1,65 +1,106 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
+import DigitBox from "@/components/DigitBox";
+
+// For now let's keep this shit
+const INITIAL_TIME_SECONDS = 2 * 60 * 60 + 10 * 60 + 15; // 02:10:15
 
 export default function Home() {
+  const [remainingSeconds, setRemainingSeconds] =
+    useState(INITIAL_TIME_SECONDS);
+
+  // Decrement the timer once per second, based on state, and stop at 0.
+  useEffect(() => {
+    if (remainingSeconds <= 0) return;
+
+    const intervalId = window.setInterval(() => {
+      setRemainingSeconds((prev) => {
+        if (prev <= 1) {
+          window.clearInterval(intervalId);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(intervalId);
+  }, [remainingSeconds]);
+
+  const hours = Math.floor(remainingSeconds / 3600);
+  const minutes = Math.floor((remainingSeconds % 3600) / 60);
+  const seconds = remainingSeconds % 60;
+
+  const toTwoDigits = (value: number) =>
+    value.toString().padStart(2, "0").split("");
+
+  const [hoursFirst, hoursSecond] = toTwoDigits(hours);
+  const [minutesFirst, minutesSecond] = toTwoDigits(minutes);
+  const [secondsFirst, secondsSecond] = toTwoDigits(seconds);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="min-h-screen flex items-center justify-center px-4 text-white">
+      <section className="w-full max-w-5xl py-12 px-6 sm:px-10 md:px-14 flex flex-col items-center justify-center text-center">
+        <div className="space-y-2 mb-10">
+          <p className="text-xl sm:text-2xl md:text-3xl font-semibold">
+            Welcome to GDG Hackathon 2026!
+          </p>
+          <p className="text-xl sm:text-2xl md:text-3xl font-semibold">
+            Have Fun Relax and Hack On!!
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="flex items-start justify-center gap-4 sm:gap-6 md:gap-10 mb-10">
+          <div className="flex flex-col items-center">
+            <div className="flex gap-2">
+              <DigitBox digit={hoursFirst} />
+              <DigitBox digit={hoursSecond} />
+            </div>
+            <p className="mt-3 text-xs sm:text-sm md:text-base tracking-[0.25em] uppercase">
+              hours
+            </p>
+          </div>
+
+          <div className="flex flex-col items-center justify-center pt-4 sm:pt-5 md:pt-6">
+            <span className="text-3xl sm:text-4xl md:text-5xl font-semibold">
+              :
+            </span>
+          </div>
+
+          <div className="flex flex-col items-center">
+            <div className="flex gap-2">
+              <DigitBox digit={minutesFirst} />
+              <DigitBox digit={minutesSecond} />
+            </div>
+            <p className="mt-3 text-xs sm:text-sm md:text-base tracking-[0.25em] uppercase">
+              minutes
+            </p>
+          </div>
+
+          <div className="flex flex-col items-center justify-center pt-4 sm:pt-5 md:pt-6">
+            <span className="text-3xl sm:text-4xl md:text-5xl font-semibold">
+              :
+            </span>
+          </div>
+
+          <div className="flex flex-col items-center">
+            <div className="flex gap-2">
+              <DigitBox digit={secondsFirst} />
+              <DigitBox digit={secondsSecond} />
+            </div>
+            <p className="mt-3 text-xs sm:text-sm md:text-base tracking-[0.25em] uppercase">
+              seconds
+            </p>
+          </div>
         </div>
-      </main>
-    </div>
+
+        <div className="space-y-2 text-sm sm:text-base md:text-lg">
+          <p className="opacity-90">some small description here</p>
+          <p className="opacity-90">
+            Meanwhile have some tea and a snacks to keep you busy
+          </p>
+        </div>
+      </section>
+    </main>
   );
 }
