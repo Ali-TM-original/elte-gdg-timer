@@ -8,6 +8,8 @@ We have a bar similar to the one on a macbook XD to control the timer and set th
 
 ![bar](./showcase/bar.png)
 
+| Side note: ctrl + k (windows) cmd + k (mac) to open the bar
+
 ## DEV STUFF
 
 First, run the development server:
