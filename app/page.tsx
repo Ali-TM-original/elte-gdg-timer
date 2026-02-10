@@ -1,31 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import DigitBox from "@/components/DigitBox";
-
-// For now let's keep this shit
-const INITIAL_TIME_SECONDS = 2 * 60 * 60 + 10 * 60 + 15; // 02:10:15
+import { useTimer } from "@/components/context/TimerContext";
 
 export default function Home() {
-  const [remainingSeconds, setRemainingSeconds] =
-    useState(INITIAL_TIME_SECONDS);
-
-  // Decrement the timer once per second, based on state, and stop at 0.
-  useEffect(() => {
-    if (remainingSeconds <= 0) return;
-
-    const intervalId = window.setInterval(() => {
-      setRemainingSeconds((prev) => {
-        if (prev <= 1) {
-          window.clearInterval(intervalId);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => window.clearInterval(intervalId);
-  }, [remainingSeconds]);
+  const { remainingSeconds } = useTimer();
 
   const hours = Math.floor(remainingSeconds / 3600);
   const minutes = Math.floor((remainingSeconds % 3600) / 60);
