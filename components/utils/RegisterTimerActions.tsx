@@ -2,7 +2,7 @@
 
 import { useRegisterActions } from "kbar";
 import { useTimer } from "@/components/context/TimerContext";
-import { useCallback } from "react";
+import { useCustomTimeModal } from "@/components/context/CustomTimeModalContext";
 
 const PRESETS: { id: string; name: string; h: number; m: number; s: number }[] =
   [
@@ -16,14 +16,7 @@ const PRESETS: { id: string; name: string; h: number; m: number; s: number }[] =
 
 export default function RegisterTimerActions() {
   const { setTime, start, stop, reset } = useTimer();
-
-  // I don't know about this yet will have to think of how to do a custom timer
-  const setCustomTime = useCallback(() => {
-    const h = parseInt(window.prompt("Hours (0–23)?", "0") ?? "0", 10) || 0;
-    const m = parseInt(window.prompt("Minutes (0–59)?", "10") ?? "10", 10) || 0;
-    const s = parseInt(window.prompt("Seconds (0–59)?", "0") ?? "0", 10) || 0;
-    setTime(h, m, s);
-  }, [setTime]);
+  const { openModal } = useCustomTimeModal();
 
   useRegisterActions(
     [
@@ -39,7 +32,7 @@ export default function RegisterTimerActions() {
         name: "Set custom time…",
         keywords: "timer set custom",
         section: "Timer",
-        perform: setCustomTime,
+        perform: openModal,
       },
       {
         id: "start_timer",
@@ -66,7 +59,7 @@ export default function RegisterTimerActions() {
         perform: reset,
       },
     ],
-    [setTime, start, stop, reset, setCustomTime],
+    [setTime, start, stop, reset, openModal],
   );
 
   return null;

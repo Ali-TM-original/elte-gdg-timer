@@ -5,6 +5,7 @@ import { KBarProvider } from "kbar";
 import "./globals.css";
 import CommandBar from "@/components/CommandBar";
 import { TimerProvider } from "../components/context/TimerContext";
+import { CustomTimeModalProvider } from "@/components/context/CustomTimeModalContext";
 import RegisterTimerActions from "@/components/utils/RegisterTimerActions";
 
 const geistSans = Geist({
@@ -29,9 +30,11 @@ export default function RootLayout({
       >
         <KBarProvider options={{ enableHistory: true }}>
           <TimerProvider>
-            <RegisterTimerActions />
-            <CommandBar />
-            {children}
+            <CustomTimeModalProvider>
+              <RegisterTimerActions />
+              <CommandBar />
+              {children}
+            </CustomTimeModalProvider>
           </TimerProvider>
         </KBarProvider>
       </body>
